@@ -359,7 +359,7 @@
     const dash = stageEl.querySelector('.dash');
     if (!dash) return;
     const root = document.documentElement;
-    const TILT = { rotate: 18, shift: 40, opacity: 0.6, perspective: 1400, endAt: 0.4, overlap: 0.4, introDone: 1400 };
+    const TILT = { rotate: 18, shift: 24, opacity: 0.6, perspective: 1400, endAt: 0.4, overlap: 0.4, introDone: 1000 };
 
     // Karte ragt zu 40 % ihrer Höhe aus dem Hero; #leistungen rückt entsprechend ab
     const setOverlap = () => root.style.setProperty('--dash-overlap', `${Math.round(dash.offsetHeight * TILT.overlap)}px`);
