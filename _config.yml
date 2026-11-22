@@ -1,0 +1,4 @@
+# GitHub Pages: interne Dateien nicht veröffentlichen
+exclude:
+  - README.md
+  - OFFENE-PUNKTE.md
