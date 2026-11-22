@@ -97,9 +97,99 @@
   const radar = document.querySelector('.hero__dots');
   if (radar && radar.getContext) initRadar(radar, reduce);
 
+  // Kontaktformular: Prüfung + Versand per fetch (ohne JS normales POST)
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm && window.fetch && window.FormData) initContactForm(contactForm);
+
   // Jahr im Footer
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
+
+  function initContactForm(form) {
+    const MSG = {
+      name: 'Bitte geben Sie Ihren Namen an.',
+      email: 'Bitte geben Sie eine E-Mail-Adresse an.',
+      emailInvalid: 'Bitte prüfen Sie die E-Mail-Adresse.',
+      nachricht: 'Bitte schreiben Sie uns kurz, worum es geht.',
+      datenschutz: 'Bitte stimmen Sie der Datenschutzerklärung zu.',
+      sending: 'Wird gesendet …',
+      success: 'Danke! Ihre Anfrage ist angekommen. Wir melden uns schnellstmöglich.',
+      error: 'Das hat leider nicht geklappt. Bitte rufen Sie uns direkt an: <span class="nowrap"><a href="tel:+4917664806445">0176&nbsp;64806445</a></span>.',
+    };
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const button = form.querySelector('.contact-form__submit');
+    const status = form.querySelector('.contact-form__status');
+    const buttonLabel = button.textContent;
+
+    const setError = (input, message) => {
+      const field = input.closest('.field');
+      const err = field && field.querySelector('.field__error');
+      if (field) field.classList.toggle('is-invalid', Boolean(message));
+      if (err) err.textContent = message || '';
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    };
+
+    const errorFor = (input) => {
+      const value = input.type === 'checkbox' ? input.checked : input.value.trim();
+      if (input.name === 'email') {
+        if (!value) return MSG.email;
+        return EMAIL_RE.test(value) ? '' : MSG.emailInvalid;
+      }
+      if (input.required && !value) return MSG[input.name] || 'Bitte ausfüllen.';
+      return '';
+    };
+
+    const validate = () => {
+      const fields = [...form.querySelectorAll('[required]')];
+      const invalid = fields.filter((input) => {
+        const message = errorFor(input);
+        setError(input, message);
+        return Boolean(message);
+      });
+      if (invalid.length) invalid[0].focus();
+      return invalid.length === 0;
+    };
+
+    const showStatus = (type, html) => {
+      status.classList.remove('is-shown', 'is-success', 'is-error');
+      status.innerHTML = html; // nur feste, eigene Texte – keine Nutzereingaben
+      if (type) status.classList.add(`is-${type}`);
+      requestAnimationFrame(() => status.classList.add('is-shown'));
+    };
+
+    // Fehler beim Korrigieren direkt wieder entfernen
+    form.addEventListener('input', (e) => {
+      const input = e.target;
+      if (input.closest('.field.is-invalid') && !errorFor(input)) setError(input, '');
+    });
+    form.addEventListener('change', (e) => {
+      if (e.target.type === 'checkbox' && e.target.checked) setError(e.target, '');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+      button.disabled = true;
+      button.textContent = MSG.sending;
+      status.classList.remove('is-shown');
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(`Formspree antwortete mit ${res.status}`);
+        form.reset();
+        showStatus('success', MSG.success);
+      } catch (err) {
+        console.warn('[Kontaktformular]', err);
+        showStatus('error', MSG.error);
+      } finally {
+        button.disabled = false;
+        button.textContent = buttonLabel;
+      }
+    });
+  }
 
   function initRadar(canvas, reduceMotion) {
     const CFG = {

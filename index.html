@@ -236,6 +236,50 @@
         <li><span class="contact__label">E-Mail</span><a href="mailto:info@nv-bayern-security.de">info@nv-bayern-security.de</a></li>
         <li><span class="contact__label">Standort</span><span>93051 Regensburg</span></li>
       </ul>
+      <form class="contact-form reveal" action="https://formspree.io/f/xppdoaov" method="POST" novalidate>
+        <div class="contact-form__grid">
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input id="cf-name" name="name" type="text" required autocomplete="name" aria-describedby="cf-name-err">
+            <p class="field__error" id="cf-name-err"></p>
+          </div>
+          <div class="field">
+            <label for="cf-telefon">Telefon</label>
+            <input id="cf-telefon" name="telefon" type="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="cf-email">E-Mail</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" aria-describedby="cf-email-err">
+            <p class="field__error" id="cf-email-err"></p>
+          </div>
+          <div class="field">
+            <label for="cf-einsatz">Art des Einsatzes</label>
+            <select id="cf-einsatz" name="einsatz">
+              <option value="">Bitte wählen</option>
+              <option>Objektschutz</option>
+              <option>Veranstaltungsschutz</option>
+              <option>Empfangs- &amp; Pfortendienst</option>
+              <option>Baustellenbewachung</option>
+              <option>Revier- &amp; Streifendienst</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div class="field field--full">
+            <label for="cf-nachricht">Nachricht</label>
+            <textarea id="cf-nachricht" name="nachricht" rows="5" required aria-describedby="cf-nachricht-err"></textarea>
+            <p class="field__error" id="cf-nachricht-err"></p>
+          </div>
+        </div>
+        <div class="field field--check">
+          <input id="cf-datenschutz" name="datenschutz" type="checkbox" value="ja" required aria-describedby="cf-datenschutz-err">
+          <label for="cf-datenschutz">Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage einverstanden.</label>
+          <p class="field__error" id="cf-datenschutz-err"></p>
+        </div>
+        <input type="hidden" name="_subject" value="Neue Anfrage über nv-bayern-security.de">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
+        <button class="btn btn--primary contact-form__submit" type="submit">Anfrage senden</button>
+        <p class="contact-form__status" role="status" aria-live="polite"></p>
+      </form>
       <div class="hero__actions reveal">
         <a class="btn btn--primary" href="tel:+4917664806445">Jetzt anrufen</a>
         <a class="btn btn--ghost" href="https://wa.me/4917664806445" target="_blank" rel="noopener">WhatsApp schreiben</a>
