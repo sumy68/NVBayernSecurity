@@ -93,9 +93,13 @@
   window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   update();
 
-  // Hero: Halftone-Punkteraster mit dezentem Scan-Impuls und Atmen
-  const radar = document.querySelector('.hero__dots');
-  if (radar && radar.getContext) initRadar(radar, reduce);
+  // Hero: Halftone-Punkte von links und rechts, Mitte frei, langsame Welle
+  const dots = document.querySelector('.hero__dots');
+  if (dots && dots.getContext) initHalftone(dots, reduce);
+
+  // Hero: Einsatzkarte kippt beim Scrollen in Position, Linien zeichnen sich
+  const stage = document.querySelector('.hero__stage');
+  if (stage) initDash(stage, reduce);
 
   // Kontaktformular: Prüfung + Versand per fetch (ohne JS normales POST)
   const contactForm = document.querySelector('.contact-form');
@@ -191,29 +195,23 @@
     });
   }
 
-  function initRadar(canvas, reduceMotion) {
+  function initHalftone(canvas, reduceMotion) {
     const CFG = {
-      gapDesktop: 14,
-      gapMobile: 12,
+      gap: 12,
+      gapMobile: 10,
       mobileBreak: 600,
-      centerY: 0.46, // Ursprung des Scans = Schild
-      rMin: 0.4,
-      rGrow: 1.8,
-      rExp: 1.6,
-      aMin: 0.1,
-      aGrow: 0.35,
-      vignetteExp: 2.4, // seitliches Ausblenden
-      textFade: 0.8, // Raster hinter dem Text um 80 % zurücknehmen (Lesbarkeit)
-      alphaSteps: 48,
-      pulseEvery: 4500,
-      pulseDuration: 3000,
-      band: 40,
-      ringScale: 0.6,
-      ringAlpha: 0.25,
-      glowDecay: 450,
-      breathPeriod: 6000,
-      breathAmp: 0.08,
-      baseInterval: 1000 / 15, // Atmen ändert sich langsam: Grundraster mit 15 fps
+      hFree: 0.35, // innerhalb dieser Zone bleibt die Mitte frei
+      hMinMobile: 0.55, // mobil erst weiter außen zeichnen
+      exp: 1.3,
+      rBase: 0.3,
+      rGrow: 2.4,
+      aBase: 0.15,
+      aGrow: 0.75,
+      sMin: 0.03,
+      alphaSteps: 40,
+      pulseEvery: 5000,
+      pulseGain: 0.25,
+      pulseSigma: 120 / 2.355, // Gauß-Kurve mit 120px Halbwertsbreite
     };
     const TAU = Math.PI * 2;
     const ctx = canvas.getContext('2d');
@@ -224,85 +222,64 @@
 
     let grid = null;
     let raf = 0;
-    let last = 0;
-    let lastBase = 0;
     let inView = true;
 
-    const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+    const clamp01 = (n) => Math.min(1, Math.max(0, n));
 
-    // Ellipse um den Textblock: dort wird das Raster weich zurückgenommen
-    const measureText = () => {
-      const content = hero && hero.querySelector('.hero__content');
-      if (!content) return () => 1;
-      const c = canvas.getBoundingClientRect();
-      const r = content.getBoundingClientRect();
-      const ex = r.left - c.left + r.width / 2;
-      const ey = r.top - c.top + r.height / 2;
-      const rx = Math.max(r.width * 0.62, 1);
-      const ry = Math.max(r.height * 0.68, 1);
-      return (x, y) => {
-        const t = Math.hypot((x - ex) / rx, (y - ey) / ry);
-        const edge = Math.min(1, Math.max(0, (t - 0.55) / 0.45));
-        return 1 - CFG.textFade * (1 - edge * edge * (3 - 2 * edge));
-      };
-    };
+    // Stärke s aus horizontalem Abstand zur Mitte (h) und Höhe (v)
+    const strength = (h, v) => Math.pow(clamp01((h - CFG.hFree) / (1 - CFG.hFree)), CFG.exp) * (0.35 + 0.65 * v);
 
-    // Halftone: Punkte wachsen nach unten, Alpha nach unten kräftiger, Ränder weich aus
+    // Punkte zeilenweise, je Zeile nach Alpha-Stufe gruppiert (ein Pfad pro Stufe)
     const build = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       if (!w || !h) return null;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const cx = w * 0.5;
-      const cy = h * CFG.centerY;
-      const maxR = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy));
-      const gap = w < CFG.mobileBreak ? CFG.gapMobile : CFG.gapDesktop;
-      const textZone = measureText();
-      const dots = [];
-      for (let y = cy % gap; y < h; y += gap) {
-        const ny = y / h;
-        const r = CFG.rMin + CFG.rGrow * Math.pow(ny, CFG.rExp);
-        const ay = CFG.aMin + CFG.aGrow * ny;
+      const mobile = w < CFG.mobileBreak;
+      const gap = mobile ? CFG.gapMobile : CFG.gap;
+      const hCut = mobile ? CFG.hMinMobile : 0;
+      const cx = w / 2;
+      const rows = [];
+      for (let y = gap / 2; y < h; y += gap) {
+        const v = y / h;
+        const groups = new Map();
         for (let x = cx % gap; x < w; x += gap) {
-          const v = (1 - Math.pow(Math.abs(x - cx) / cx, CFG.vignetteExp)) * textZone(x, y);
-          if (v > 0.02) dots.push({ x, y, r, ay, v, d: Math.hypot(x - cx, y - cy) });
+          const hd = Math.abs(x - cx) / cx;
+          if (hd <= hCut) continue;
+          const s = strength(hd, v);
+          if (s < CFG.sMin) continue;
+          const step = Math.round((CFG.aBase + CFG.aGrow * s) * CFG.alphaSteps);
+          const group = groups.get(step) || { xs: [], rs: [] };
+          group.xs.push(x);
+          group.rs.push(CFG.rBase + CFG.rGrow * s);
+          groups.set(step, group);
+        }
+        if (groups.size) {
+          rows.push({ y, groups: [...groups].map(([step, g]) => ({ alpha: step / CFG.alphaSteps, xs: g.xs, rs: g.rs })) });
         }
       }
-      // Nach Alpha gruppieren: ein Pfad pro Stufe statt tausender fill()-Aufrufe
-      const buckets = new Map();
-      dots.forEach((p, i) => {
-        const step = Math.round(p.ay * p.v * CFG.alphaSteps);
-        if (step <= 0) return;
-        const list = buckets.get(step);
-        if (list) list.push(i);
-        else buckets.set(step, [i]);
+      return { w, h, gap, dpr: Math.min(window.devicePixelRatio || 1, 2), rows };
+    };
+
+    const drawRow = (c, row, scale) => {
+      row.groups.forEach((g) => {
+        c.globalAlpha = g.alpha;
+        c.beginPath();
+        for (let i = 0; i < g.xs.length; i += 1) {
+          const r = g.rs[i] * scale;
+          c.moveTo(g.xs[i] + r, row.y);
+          c.arc(g.xs[i], row.y, r, 0, TAU);
+        }
+        c.fill();
       });
-      const layers = [...buckets].map(([step, idx]) => ({ alpha: step / CFG.alphaSteps, idx }));
-      return { w, h, dpr, maxR, dots, layers, glow: new Float32Array(dots.length) };
+      c.globalAlpha = 1;
     };
 
-    const sizeCanvas = (c, g) => {
-      c.width = Math.round(g.w * g.dpr);
-      c.height = Math.round(g.h * g.dpr);
-    };
-
-    const drawBase = (g, breath) => {
-      baseCtx.setTransform(1, 0, 0, 1, 0, 0);
-      baseCtx.clearRect(0, 0, base.width, base.height);
+    const drawBase = (g) => {
+      base.width = canvas.width = Math.round(g.w * g.dpr);
+      base.height = canvas.height = Math.round(g.h * g.dpr);
       baseCtx.setTransform(g.dpr, 0, 0, g.dpr, 0, 0);
       baseCtx.fillStyle = '#fff';
-      g.layers.forEach((layer) => {
-        baseCtx.globalAlpha = layer.alpha;
-        baseCtx.beginPath();
-        layer.idx.forEach((i) => {
-          const p = g.dots[i];
-          const r = p.r * breath;
-          baseCtx.moveTo(p.x + r, p.y);
-          baseCtx.arc(p.x, p.y, r, 0, TAU);
-        });
-        baseCtx.fill();
-      });
-      baseCtx.globalAlpha = 1;
+      g.rows.forEach((row) => drawRow(baseCtx, row, 1));
     };
 
     const blitBase = () => {
@@ -311,52 +288,31 @@
       ctx.drawImage(base, 0, 0);
     };
 
-    const ringRadii = (t) => {
-      const k = Math.floor(t / CFG.pulseEvery);
-      return [k, k - 1]
-        .map((n) => (t - n * CFG.pulseEvery) / CFG.pulseDuration)
-        .filter((p) => p >= 0 && p < 1)
-        .map((p) => easeOut(p) * grid.maxR);
-    };
-
+    // Welle läuft alle 5 s von unten nach oben: nur die Zeilen im Band neu zeichnen
     const frame = (now) => {
       raf = requestAnimationFrame(frame);
       const g = grid;
-      const dt = Math.min(now - (last || now), 50);
-      last = now;
-      const breath = 1 + CFG.breathAmp * Math.sin((TAU * now) / CFG.breathPeriod);
-      if (now - lastBase >= CFG.baseInterval) {
-        drawBase(g, breath);
-        lastBase = now;
-      }
+      const sigma = CFG.pulseSigma;
+      const reach = sigma * 3;
+      const p = (now % CFG.pulseEvery) / CFG.pulseEvery;
+      const yWave = g.h + reach - p * (g.h + reach * 2);
       blitBase();
-
-      // Scan-Ring: Punkte kurz größer und heller, ohne Farbwechsel
-      const rings = ringRadii(now);
-      const decay = Math.exp(-dt / CFG.glowDecay);
+      const band = g.rows.filter((row) => Math.abs(row.y - yWave) < reach);
+      if (!band.length) return;
+      const top = band[0].y - g.gap / 2;
+      const bottom = band[band.length - 1].y + g.gap / 2;
+      ctx.clearRect(0, Math.floor(top * g.dpr), canvas.width, Math.ceil((bottom - top) * g.dpr));
       ctx.setTransform(g.dpr, 0, 0, g.dpr, 0, 0);
       ctx.fillStyle = '#fff';
-      for (let i = 0; i < g.dots.length; i += 1) {
-        const p = g.dots[i];
-        let band = 0;
-        for (let j = 0; j < rings.length; j += 1) {
-          band = Math.max(band, 1 - Math.abs(p.d - rings[j]) / CFG.band);
-        }
-        g.glow[i] = Math.max(band, g.glow[i] * decay);
-        const glow = g.glow[i];
-        if (glow < 0.02) continue;
-        ctx.globalAlpha = Math.min(1, (p.ay + CFG.ringAlpha * glow) * p.v);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * breath * (1 + CFG.ringScale * glow), 0, TAU);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
+      band.forEach((row) => {
+        const d = (row.y - yWave) / sigma;
+        drawRow(ctx, row, 1 + CFG.pulseGain * Math.exp(-0.5 * d * d));
+      });
     };
 
     const stop = () => {
       cancelAnimationFrame(raf);
       raf = 0;
-      last = 0;
     };
     const start = () => {
       if (reduceMotion || raf || !grid || !inView || document.hidden) return;
@@ -367,29 +323,23 @@
       const next = build();
       if (!next) return;
       grid = next;
-      sizeCanvas(canvas, grid);
-      sizeCanvas(base, grid);
-      drawBase(grid, 1);
-      blitBase();
+      drawBase(grid);
+      blitBase(); // Reduced Motion: bleibt als statisches Bild stehen
       start();
     };
 
+    // Hero-Höhe hängt an Inhalt und Karte (nicht am Viewport): nur bei echter Größenänderung neu bauen
     let resizeTimer = 0;
-    let lastW = canvas.clientWidth;
-    let lastH = canvas.clientHeight;
-    window.addEventListener('resize', () => {
+    const onResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        // Mobile Adressleiste verändert die Höhe nur leicht: dann nicht neu bauen
-        const w = canvas.clientWidth;
-        const h = canvas.clientHeight;
-        if (w === lastW && Math.abs(h - lastH) < 80) return;
-        lastW = w;
-        lastH = h;
+        if (grid && canvas.clientWidth === grid.w && canvas.clientHeight === grid.h) return;
         stop();
         render();
       }, 150);
-    });
+    };
+    if ('ResizeObserver' in window && hero) new ResizeObserver(onResize).observe(hero);
+    else window.addEventListener('resize', onResize);
 
     if (!reduceMotion) {
       document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
@@ -403,5 +353,68 @@
     }
 
     render();
+  }
+
+  function initDash(stageEl, reduceMotion) {
+    const dash = stageEl.querySelector('.dash');
+    if (!dash) return;
+    const root = document.documentElement;
+    const TILT = { rotate: 18, shift: 40, opacity: 0.6, perspective: 1400, endAt: 0.4, overlap: 0.4, introDone: 1400 };
+
+    // Karte ragt zu 40 % ihrer Höhe aus dem Hero; #leistungen rückt entsprechend ab
+    const setOverlap = () => root.style.setProperty('--dash-overlap', `${Math.round(dash.offsetHeight * TILT.overlap)}px`);
+    setOverlap();
+    if ('ResizeObserver' in window) new ResizeObserver(setOverlap).observe(dash);
+    else window.addEventListener('resize', setOverlap);
+
+    // Seidenlinien zeichnen sich nacheinander, sobald die Karte sichtbar ist
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      dash.classList.add('is-armed');
+      const io = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        // erst zeichnen, wenn die Karte eingeblendet ist
+        const wait = Math.max(0, TILT.introDone - performance.now());
+        setTimeout(() => dash.classList.add('is-drawn'), wait);
+      }, { threshold: 0.3 });
+      io.observe(dash);
+    }
+
+    if (reduceMotion) return;
+
+    // Kippen: scroll-gekoppelt, fertig wenn die Oberkante 40 % der Viewport-Höhe erreicht
+    let end = 1;
+    let lastP = -1;
+    let ticking = false;
+    const measure = () => {
+      const top = stageEl.getBoundingClientRect().top + window.scrollY;
+      end = top - window.innerHeight * TILT.endAt;
+    };
+    const apply = () => {
+      ticking = false;
+      const p = end > 0 ? Math.min(1, Math.max(0, window.scrollY / end)) : 1;
+      if (p === lastP) return;
+      lastP = p;
+      const k = 1 - p;
+      dash.classList.toggle('is-tilting', p < 1);
+      dash.style.transform = p < 1 ? `perspective(${TILT.perspective}px) rotateX(${(TILT.rotate * k).toFixed(3)}deg) translateY(${(TILT.shift * k).toFixed(2)}px)` : 'none';
+      dash.style.opacity = String(TILT.opacity + (1 - TILT.opacity) * p);
+    };
+    const request = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(apply);
+      }
+    };
+    const remeasure = () => {
+      measure();
+      lastP = -1;
+      request();
+    };
+    measure();
+    apply();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', remeasure);
+    window.addEventListener('load', remeasure);
   }
 })();
