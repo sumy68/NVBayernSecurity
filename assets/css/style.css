@@ -198,3 +198,60 @@ details p { margin-top: 12px; font-size: .95rem; }
   .footer__nav { margin-left: 0; }
   .hero__shield { width: 110vw; }
 }
+
+
+/* ---------- Motion v2 (dezent) ---------- */
+/* Scroll-Fortschritt */
+.progress { position: fixed; inset: 0 0 auto 0; height: 2px; z-index: 60; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+
+/* Hero-Einstieg beim Laden */
+.hero .intro { opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform 1.1s var(--spring); transition-delay: var(--d, 0s); }
+.is-loaded .hero .intro { opacity: 1; transform: none; }
+.hero__shield { transition: opacity 1.6s var(--ease); }
+.hero__shield-wrap { position: absolute; inset: 0; will-change: transform; }
+
+/* Wort-für-Wort-Masken für Überschriften */
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+.split .w > span { display: inline-block; transform: translateY(105%); transition: transform 1s var(--spring); transition-delay: calc(var(--i) * 55ms + var(--base, 0s)); }
+.is-loaded .hero .split .w > span, .is-visible .split .w > span, .split.is-visible .w > span { transform: none; }
+
+/* Buttons: Druck-Feedback + Lichtkante */
+.btn:active { transform: scale(.97); transition-duration: .1s; }
+.btn--primary { position: relative; overflow: hidden; isolation: isolate; }
+.btn--primary::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .35) 50%, transparent 70%); transform: translateX(-120%); transition: transform .9s var(--ease); }
+.btn--primary:hover::after { transform: translateX(120%); }
+
+/* Karten: Lichtkegel folgt der Maus + Linie oben */
+.card { position: relative; overflow: hidden; }
+.card > * { position: relative; z-index: 1; }
+.card::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(10, 155, 223, .10), transparent 60%); transition: opacity .4s var(--ease); }
+.card::after { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 100%; background: var(--blue); transform: scaleX(0); transform-origin: 0 50%; transition: transform .7s var(--spring); }
+.card:hover::before { opacity: 1; }
+.card:hover::after { transform: scaleX(1); }
+.card--cta::before { background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(46, 177, 240, .22), transparent 60%); }
+.card__icon { transition: transform .6s var(--spring); }
+.card:hover .card__icon { transform: translateY(-2px) scale(1.06); }
+
+/* Features: Linie zeichnet sich unter der Nummer */
+.feature__num { position: relative; padding-bottom: 16px; }
+.feature__num::after { content: ""; position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: var(--blue); transform: scaleX(0); transform-origin: 0 50%; transition: transform .9s var(--spring); transition-delay: calc(var(--d, 0s) + .25s); }
+.feature.is-visible .feature__num::after { transform: scaleX(1); }
+
+/* Einsatzgebiet: Orte nacheinander */
+.area__list li { opacity: 0; transform: translateY(12px); transition: opacity .7s var(--ease), transform .9s var(--spring), color .25s var(--ease), padding-left .5s var(--spring); transition-delay: calc(var(--i) * 60ms), calc(var(--i) * 60ms), 0s, 0s; }
+.area__list.is-visible li { opacity: 1; transform: none; }
+.area__list li:hover { color: var(--blue-light); padding-left: 6px; }
+
+/* Ablauf: Schritte leuchten nacheinander auf */
+.step__num { transition: background-color .5s var(--ease), transform .6s var(--spring), box-shadow .6s var(--ease); }
+.step.is-visible .step__num { background: var(--blue); box-shadow: 0 0 0 6px rgba(10, 155, 223, .15); transition-delay: calc(var(--d, 0s) + .35s); }
+
+@media (prefers-reduced-motion: reduce) {
+  .progress { display: none; }
+  .hero .intro, .split .w > span, .area__list li { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .feature__num::after { transform: scaleX(1); transition: none; }
+  .hero__shield, .hero__glow, .hero__scroll span { animation: none !important; }
+  .hero__shield-wrap { transform: none !important; }
+  .btn--primary::after, .card::before, .card::after { display: none; }
+  .step__num, .card__icon, .btn { transition: none !important; }
+}

@@ -39,6 +39,60 @@
     items.forEach((el) => el.classList.add('is-visible'));
   }
 
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Überschriften Wort für Wort (Text bleibt für SEO identisch im DOM)
+  document.querySelectorAll('.hero h1, .section__head h2').forEach((el) => {
+    el.classList.add('split');
+    const words = el.textContent.trim().split(' ');
+    el.textContent = '';
+    words.forEach((w, i) => {
+      const outer = document.createElement('span');
+      outer.className = 'w';
+      const inner = document.createElement('span');
+      inner.textContent = w;
+      inner.style.setProperty('--i', i);
+      outer.appendChild(inner);
+      el.appendChild(outer);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+    });
+  });
+
+  // Einsatzorte nacheinander
+  document.querySelectorAll('.area__list li').forEach((li, i) => li.style.setProperty('--i', i));
+
+  // Hero nach dem Laden starten
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('is-loaded')));
+
+  // Lichtkegel auf Karten folgt der Maus
+  if (!reduce && window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.card').forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        card.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+  }
+
+  // Scroll-Fortschritt + leichte Parallaxe des Schild-Wasserzeichens
+  const bar = document.createElement('div');
+  bar.className = 'progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  const shield = document.querySelector('.hero__shield-wrap');
+  let ticking = false;
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+    if (shield && !reduce && window.scrollY < window.innerHeight * 1.2) {
+      shield.style.transform = `translate3d(0, ${window.scrollY * 0.25}px, 0) scale(${1 + window.scrollY * 0.0002})`;
+    }
+    ticking = false;
+  };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+
   // Jahr im Footer
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
