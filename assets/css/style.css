@@ -307,16 +307,17 @@ details p { margin-top: 12px; font-size: .95rem; }
   /* Weiß beginnt etwa auf Höhe der Karten-Mitte (Überlappung = 40 % der Kartenhöhe, Mitte = 1/4 davon über dem Hero-Ende) */
   background: linear-gradient(180deg, #050B2E 0%, #0A1F6B 20%, #0B4FD1 48%, #3E9BFF calc(100% - var(--dash-overlap, 200px) * 1.6), #CFE9FF calc(100% - var(--dash-overlap, 200px) * .8), #FFFFFF calc(100% - var(--dash-overlap, 200px) * .25)); overflow-x: clip; }
 .hero__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.hero__shield { position: absolute; left: 50%; top: 38%; width: min(78vw, 640px); transform: translate(-50%, -50%); opacity: .04; animation: float 12s ease-in-out infinite; }
-@keyframes float { 50% { transform: translate(-50%, -53%) rotate(-2deg); } }
+.hero__shield { position: absolute; left: 50%; top: 38%; width: min(78vw, 640px); transform: translate(-50%, -50%); opacity: .04; }
+/* Feld etwas größer als der Hero, damit die Parallaxe keine leeren Ränder zeigt */
+.hero__field { position: absolute; inset: -16px; }
 .hero__dots { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.hero__content { position: relative; z-index: 1; max-width: 900px; }
+.hero__content { position: relative; z-index: 1; max-width: 900px; transform-origin: 50% 0; }
 
 /* Typo */
-.hero .eyebrow { display: inline-flex; align-items: center; margin-bottom: 18px; font-family: var(--font-body); font-weight: 500; font-size: .85rem; letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, .8); }
+.hero .eyebrow { display: flex; justify-content: center; align-items: center; margin-bottom: 18px; font-family: var(--font-body); font-weight: 500; font-size: .85rem; letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, .8); }
 /* Schriftgröße auch an der Höhe begrenzt, damit die Einsatzkarte im ersten Bildschirm anschneidet */
-.hero h1 { max-width: 17ch; margin-inline: auto; font-family: var(--font-body); font-weight: 500; font-size: clamp(2.6rem, min(6vw, 8.4vh), 4.6rem); line-height: 1.04; letter-spacing: -.035em; color: var(--white); text-wrap: balance; }
-.hero__lead { max-width: 640px; margin: 20px auto 0; font-weight: 400; font-size: 1.05rem; color: rgba(255, 255, 255, .85); text-wrap: pretty; }
+.hero h1 { max-width: 17ch; margin-inline: auto; font-family: var(--font-body); font-weight: 500; font-size: clamp(2.6rem, min(6vw, 8.4vh), 4.6rem); line-height: 1.04; letter-spacing: -.04em; color: var(--white); text-wrap: balance; }
+.hero__lead { max-width: 640px; margin: 20px auto 0; font-weight: 400; font-size: 1.05rem; line-height: 1.6; color: rgba(255, 255, 255, .78); text-wrap: pretty; }
 
 /* Buttons */
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 38px; }
@@ -326,20 +327,15 @@ details p { margin-top: 12px; font-size: .95rem; }
 .btn__arrow { display: block; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .4s var(--spring); }
 .btn:hover .btn__arrow, .btn:focus-visible .btn__arrow { transform: translateX(3px); }
 
-/* Status-Punkt „aktiv" */
-.status-dot { position: relative; display: inline-block; flex: none; width: 8px; height: 8px; margin-right: 12px; border-radius: 50%; background: #7CFFB2; vertical-align: .1em; }
-.status-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: statuspulse 2.4s var(--ease) infinite; }
-@keyframes statuspulse { from { transform: scale(1); opacity: .7; } to { transform: scale(3.2); opacity: 0; } }
-
 /* Dashboard-Karte: ragt ~40 % in die weiße Sektion (Wert setzt JS) */
 .hero__stage { position: relative; z-index: 2; width: 100%; max-width: 1040px; margin: 56px 0 calc(-1 * var(--dash-overlap, 200px)); }
 .hero + .section { padding-top: calc(var(--dash-overlap, 200px) + clamp(64px, 9vw, 112px)); }
-.dash { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 32px; padding: 32px; text-align: left; border: 1px solid rgba(255, 255, 255, .14); border-radius: 18px; background: #0A2A8A var(--grad-card); box-shadow: 0 40px 80px -30px rgba(5, 11, 46, .55); color: rgba(255, 255, 255, .85); transform-origin: 50% 100%; }
-.dash.is-tilting { will-change: transform, opacity; }
+.dash { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 32px; padding: 32px; text-align: left; border: 1px solid rgba(255, 255, 255, .14); border-radius: 18px; background: #0A2A8A var(--grad-card); box-shadow: 0 40px 80px -30px rgba(5, 11, 46, .55); color: rgba(255, 255, 255, .85); transform-origin: 50% 100%; }
+.dash.is-tilting { will-change: transform; }
 .dash__info { display: flex; flex-direction: column; min-width: 0; }
 .dash__label { font-size: .85rem; font-weight: 500; color: rgba(255, 255, 255, .6); }
 .dash__title { display: flex; align-items: center; margin-top: 10px; font-weight: 500; font-size: clamp(2rem, 7vw, 2.6rem); line-height: 1.1; letter-spacing: -.03em; color: var(--white); }
-.dash__title .status-dot { width: 10px; height: 10px; margin-right: 16px; }
+.dash__icon { flex: none; width: 18px; height: 18px; margin-right: 14px; fill: none; stroke: rgba(255, 255, 255, .85); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .dash__table { margin: auto 0 0; padding-top: 28px; }
 .dash__row { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 1fr); gap: 16px; padding: 14px 0; border-top: 1px solid rgba(255, 255, 255, .12); }
 .dash__row:last-child { border-bottom: 1px solid rgba(255, 255, 255, .12); }
@@ -357,8 +353,7 @@ details p { margin-top: 12px; font-size: .95rem; }
 .dash__place { font-family: var(--font-body); font-weight: 500; font-size: .75rem; fill: rgba(255, 255, 255, .75); stroke: #0A318F; stroke-width: 4px; stroke-linejoin: round; paint-order: stroke; }
 .dash__place--home { font-weight: 600; font-size: .85rem; fill: var(--white); }
 .dash__home { fill: var(--white); }
-.dash__pulse { fill: none; stroke: var(--white); stroke-width: 1; transform-box: fill-box; transform-origin: center; animation: dashpulse 2.6s var(--ease) infinite; }
-@keyframes dashpulse { from { transform: scale(1); opacity: .8; } to { transform: scale(4); opacity: 0; } }
+.dash__patrol circle { fill: var(--white); }
 /* Linien zeichnen sich nacheinander, sobald die Karte sichtbar ist */
 .dash.is-armed .dash__line { stroke-dashoffset: 1; transition: stroke-dashoffset .9s var(--ease) calc(var(--i) * 120ms); }
 .dash.is-armed .dash__stop, .dash.is-armed .dash__route .dash__place { opacity: 0; transition: opacity .5s var(--ease) calc(var(--i) * 120ms + 650ms); }
@@ -379,11 +374,47 @@ details p { margin-top: 12px; font-size: .95rem; }
   .dash__place--home { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .status-dot::after { animation: none; opacity: 0; }
   .header::before, .header::after { transition: none; }
   .dash { transform: none !important; opacity: 1 !important; }
-  .dash__pulse { animation: none; transform: scale(2); opacity: .35; }
   .dash.is-armed .dash__line { stroke-dashoffset: 0; transition: none; }
   .dash.is-armed .dash__stop, .dash.is-armed .dash__route .dash__place { opacity: 1; transition: none; }
   .btn__arrow { transition: none; }
+}
+
+/* =========================================================
+   Hero v5 – filmisches Intro, Scheinwerfer, Tiefe
+   Regel: keine Status-Animationen oder Endlos-Effekte
+   außer dem ruhigen Scheinwerfer; nur transform/opacity/filter animieren.
+   ========================================================= */
+:root { --ease-film: cubic-bezier(.16, 1, .3, 1); }
+
+/* Eyebrow: feine Linie zeichnet sich, dann folgt der Text */
+.hero__rule { flex: none; width: 24px; height: 1px; margin-right: 14px; background: rgba(255, 255, 255, .6); transform: scaleX(0); transform-origin: 0 50%; transition: transform .6s var(--ease-film); }
+.is-loaded .hero__rule { transform: scaleX(1); }
+.hero__eyebrow .intro { display: inline-block; }
+
+/* Weiche Einblendung statt Sprung: Lead, Buttons, Karte */
+.hero .intro { transform: translateY(12px); transition: opacity .8s var(--ease-film), transform .9s var(--ease-film); }
+
+/* Headline: Wort kommt per Maske von unten und wird scharf */
+.hero .split .w > span { filter: blur(8px); transition: transform .9s var(--ease-film), filter .9s var(--ease-film); transition-delay: calc(var(--i) * 35ms + var(--base, 0s)); }
+.is-loaded .hero .split .w > span { filter: blur(0); }
+.hero__accent { background: linear-gradient(180deg, #FFFFFF 15%, #CFE4FF 95%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+
+/* Punktefeld: „Kamera fährt zurück" */
+.hero__dots { opacity: 0; transform: scale(1.04); transition: opacity 1.2s var(--ease-film), transform 1.2s var(--ease-film); }
+.is-loaded .hero__dots { opacity: 1; transform: none; }
+
+/* Einsatzkarte: Lichtreflex folgt der Maus (per transform verschoben) */
+.dash__glare { position: absolute; inset: 0; z-index: 3; border-radius: inherit; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity .6s var(--ease-film); }
+.dash__glare span { position: absolute; left: -300px; top: -300px; width: 600px; height: 600px; background: radial-gradient(closest-side, rgba(255, 255, 255, .08), transparent); }
+.dash.is-hovered .dash__glare { opacity: 1; }
+.dash__patrol { pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__rule { transform: none; transition: none; }
+  .hero .split .w > span { filter: none !important; }
+  .hero__dots { opacity: 1; transform: none; transition: none; }
+  .hero__content, .hero h1, .hero__field { transform: none !important; opacity: 1 !important; }
+  .dash__glare, .dash__patrol { display: none; }
 }

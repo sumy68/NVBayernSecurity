@@ -27,7 +27,7 @@
 
 <link rel="preload" href="assets/fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=2026112203">
+<link rel="stylesheet" href="assets/css/style.css?v=2026112205">
 
 <script type="application/ld+json">
 {
@@ -101,22 +101,23 @@
   <section class="hero">
     <div class="hero__bg" aria-hidden="true">
       <div class="hero__shield-wrap"><img class="hero__shield" src="favicon.svg" alt="" width="512" height="512"></div>
-      <canvas class="hero__dots" aria-hidden="true"></canvas>
+      <div class="hero__field"><canvas class="hero__dots" aria-hidden="true"></canvas></div>
     </div>
     <div class="hero__content">
-      <p class="eyebrow intro" style="--d:0s"><span class="status-dot" aria-hidden="true"></span>Sicherheitsdienst · Regensburg &amp; Bayern</p>
-      <h1 class="split" style="--base:.1s">Sicherheit, auf die Sie sich verlassen&nbsp;können.</h1>
-      <p class="hero__lead intro" style="--d:.45s">NV Bayern Security schützt Objekte, Veranstaltungen und Menschen in Regensburg und ganz Bayern. Persönlich, zuverlässig und schnell erreichbar.</p>
-      <div class="hero__actions intro" style="--d:.55s">
+      <p class="eyebrow hero__eyebrow"><span class="hero__rule" aria-hidden="true"></span><span class="intro" style="--d:.45s">Sicherheitsdienst · Regensburg &amp; Bayern</span></p>
+      <h1 class="split" style="--base:.3s">Sicherheit, auf die Sie sich <span class="hero__accent">verlassen</span>&nbsp;können.</h1>
+      <p class="hero__lead intro" style="--d:.6s">NV Bayern Security schützt Objekte, Veranstaltungen und Menschen in Regensburg und ganz Bayern. Persönlich, zuverlässig und schnell erreichbar.</p>
+      <div class="hero__actions intro" style="--d:.75s">
         <a class="btn btn--primary" href="tel:+4917664806445">Jetzt anrufen<svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
         <a class="btn btn--ghost" href="https://wa.me/4917664806445" target="_blank" rel="noopener">WhatsApp schreiben</a>
       </div>
     </div>
-    <div class="hero__stage intro" style="--d:.7s">
+    <div class="hero__stage intro" style="--d:.9s">
       <article class="dash" aria-label="Einsatzzentrale Regensburg">
+        <div class="dash__glare" aria-hidden="true"><span></span></div>
         <div class="dash__info">
           <p class="dash__label">Einsatzzentrale Regensburg</p>
-          <p class="dash__title"><span class="status-dot" aria-hidden="true"></span>Einsatzbereit</p>
+          <p class="dash__title"><svg class="dash__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/></svg>Einsatzbereit</p>
           <dl class="dash__table">
             <div class="dash__row"><dt>Leistungen</dt><dd>Objekt-, Veranstaltungs-, Baustellenschutz u.&nbsp;a.</dd></div>
             <div class="dash__row"><dt>Einsatzgebiet</dt><dd>Regensburg · Oberpfalz · Bayern</dd></div>
@@ -157,7 +158,7 @@
               <circle class="dash__stop" cx="350" cy="198" r="3.5"/>
               <text class="dash__place" x="350" y="218" text-anchor="middle">Straubing</text>
             </g>
-            <circle class="dash__pulse" cx="210" cy="150" r="7"/>
+            <g class="dash__patrol" aria-hidden="true"></g>
             <circle class="dash__home" cx="210" cy="150" r="6"/>
             <text class="dash__place dash__place--home" x="222" y="174">Regensburg</text>
           </svg>
@@ -351,6 +352,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=2026112203" defer></script>
+<script src="assets/js/main.js?v=2026112205" defer></script>
 </body>
 </html>
