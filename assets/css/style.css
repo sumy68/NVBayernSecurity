@@ -316,7 +316,6 @@ details p { margin-top: 12px; font-size: .95rem; }
 .hero__content { position: relative; z-index: 1; max-width: 900px; transform-origin: 50% 0; }
 
 /* Typo */
-.hero .eyebrow { display: block; text-align: center; text-wrap: balance; margin-bottom: 18px; font-family: var(--font-body); font-weight: 500; font-size: .85rem; letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, .8); }
 /* Schriftgröße auch an der Höhe begrenzt, damit die Einsatzkarte im ersten Bildschirm anschneidet */
 .hero h1 { max-width: 17ch; margin-inline: auto; font-family: var(--font-body); font-weight: 500; font-size: clamp(2.6rem, min(6vw, 8.4vh), 4.6rem); line-height: 1.04; letter-spacing: -.04em; color: var(--white); text-wrap: balance; }
 .hero__lead { max-width: 640px; margin: 20px auto 0; font-weight: 400; font-size: 1.05rem; line-height: 1.6; color: rgba(255, 255, 255, .78); text-wrap: pretty; }
