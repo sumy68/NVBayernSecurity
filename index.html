@@ -27,7 +27,7 @@
 
 <link rel="preload" href="assets/fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=2026112304">
+<link rel="stylesheet" href="assets/css/style.css?v=2026112305">
 
 <script type="application/ld+json">
 {
@@ -52,7 +52,16 @@
   },
   "areaServed": [
     { "@type": "City", "name": "Regensburg" },
+    { "@type": "AdministrativeArea", "name": "Landkreis Regensburg" },
     { "@type": "AdministrativeArea", "name": "Oberpfalz" },
+    { "@type": "City", "name": "Kelheim" },
+    { "@type": "City", "name": "Straubing" },
+    { "@type": "City", "name": "Neumarkt in der Oberpfalz" },
+    { "@type": "City", "name": "Schwandorf" },
+    { "@type": "City", "name": "Landshut" },
+    { "@type": "City", "name": "Ingolstadt" },
+    { "@type": "City", "name": "München" },
+    { "@type": "City", "name": "Nürnberg" },
     { "@type": "State", "name": "Bayern" }
   ],
   "knowsAbout": ["Objektschutz", "Veranstaltungsschutz", "Empfangsdienst", "Baustellenbewachung", "Revierdienst"]
@@ -68,7 +77,7 @@
     { "@type": "Question", "name": "Wie kurzfristig ist ein Einsatz möglich?",
       "acceptedAnswer": { "@type": "Answer", "text": "Rufen Sie uns an oder schreiben Sie per WhatsApp. Wir prüfen kurzfristige Anfragen sofort und melden uns schnellstmöglich mit einer Rückmeldung." } },
     { "@type": "Question", "name": "In welchen Regionen ist NV Bayern Security im Einsatz?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Unser Sitz ist in Regensburg. Wir sind in Regensburg, im Landkreis, in der gesamten Oberpfalz und nach Absprache in ganz Bayern im Einsatz." } },
+      "acceptedAnswer": { "@type": "Answer", "text": "Unser Sitz ist in Regensburg. In Regensburg, im Landkreis und in der gesamten Oberpfalz sind wir schnell vor Ort. Größere Aufträge übernehmen wir in ganz Bayern, zum Beispiel in München und Nürnberg." } },
     { "@type": "Question", "name": "Für wen arbeitet NV Bayern Security?",
       "acceptedAnswer": { "@type": "Answer", "text": "Für Unternehmen, Hausverwaltungen, Bauunternehmen, Veranstalter, Gastronomie und Privatpersonen, die einen zuverlässigen Sicherheitsdienst suchen." } }
   ]
@@ -104,6 +113,7 @@
       <div class="hero__field"><canvas class="hero__dots" aria-hidden="true"></canvas></div>
     </div>
     <div class="hero__content">
+      <p class="eyebrow intro" style="--d:.15s"><span class="nowrap">Sicherheitsdienst aus Regensburg&nbsp;·</span> <span class="nowrap">bayernweit im Einsatz</span></p>
       <h1 class="split" style="--base:.3s">Sicherheit, auf die Sie sich <span class="hero__accent">verlassen</span>&nbsp;können.</h1>
       <p class="hero__lead intro" style="--d:.6s">NV Bayern Security schützt Objekte, Veranstaltungen und Menschen in Regensburg und ganz Bayern. Persönlich, zuverlässig und schnell erreichbar.</p>
       <div class="hero__actions intro" style="--d:.75s">
@@ -119,48 +129,66 @@
           <p class="dash__title"><svg class="dash__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/></svg>Einsatzbereit</p>
           <dl class="dash__table">
             <div class="dash__row"><dt>Leistungen</dt><dd>Objekt-, Veranstaltungs-, Baustellenschutz u.&nbsp;a.</dd></div>
-            <div class="dash__row"><dt>Einsatzgebiet</dt><dd>Regensburg · Oberpfalz · Bayern</dd></div>
+            <div class="dash__row"><dt>Einsatzgebiet</dt><dd>Regensburg, Oberpfalz und ganz Bayern</dd></div>
             <div class="dash__row"><dt>Direkt erreichbar</dt><dd><a href="tel:+4917664806445"><span class="nowrap">0176&nbsp;64806445</span></a></dd></div>
           </dl>
         </div>
         <div class="dash__map">
-          <svg viewBox="0 0 420 300" role="img" aria-label="Schematische Karte: Einsatzorte rund um Regensburg – Kelheim, Straubing, Landshut, Ingolstadt, Neumarkt i. d. OPf. und Schwandorf">
+          <svg viewBox="0 0 420 300" role="img" aria-label="Schematische Karte: Einsatzorte rund um Regensburg – Schwandorf, Neumarkt i. d. OPf., Kelheim, Ingolstadt, Landshut und Straubing; bayernweit zusätzlich München und Nürnberg">
+            <defs>
+              <mask id="reveal-nuernberg" maskUnits="userSpaceOnUse" x="-40" y="-40" width="500" height="380"><path class="dash__reveal" style="--i:6" d="M210 150 Q150 62 44 50" pathLength="1"/></mask>
+              <mask id="reveal-muenchen" maskUnits="userSpaceOnUse" x="-40" y="-40" width="500" height="380"><path class="dash__reveal" style="--i:7" d="M210 150 Q170 214 166 280" pathLength="1"/></mask>
+            </defs>
             <circle class="dash__ring" cx="210" cy="150" r="64"/>
             <circle class="dash__ring" cx="210" cy="150" r="128"/>
             <g class="dash__route" style="--i:0">
-              <path class="dash__line" d="M210 150 Q236 98 216 44" pathLength="1"/>
-              <circle class="dash__stop" cx="216" cy="44" r="3.5"/>
-              <text class="dash__place" x="226" y="48" text-anchor="start">Schwandorf</text>
+              <path class="dash__line" d="M210 150 Q232 114 214 72" pathLength="1"/>
+              <circle class="dash__stop" cx="214" cy="72" r="3.5"/>
+              <text class="dash__place" x="224" y="76" text-anchor="start">Schwandorf</text>
             </g>
             <g class="dash__route" style="--i:1">
-              <path class="dash__line" d="M210 150 Q131 139 86 74" pathLength="1"/>
-              <circle class="dash__stop" cx="86" cy="74" r="3.5"/>
-              <text class="dash__place" x="86" y="60" text-anchor="middle">Neumarkt i. d. OPf.</text>
+              <path class="dash__line" d="M210 150 Q166 142 130 106" pathLength="1"/>
+              <circle class="dash__stop" cx="130" cy="106" r="3.5"/>
+              <text class="dash__place" x="120" y="104" text-anchor="end">Neumarkt<tspan x="120" dy="1.2em">i. d. OPf.</tspan></text>
             </g>
             <g class="dash__route" style="--i:2">
-              <path class="dash__line" d="M210 150 Q157 136 112 166" pathLength="1"/>
-              <circle class="dash__stop" cx="112" cy="166" r="3.5"/>
-              <text class="dash__place" x="100" y="170" text-anchor="end">Kelheim</text>
+              <path class="dash__line" d="M210 150 Q180 146 150 170" pathLength="1"/>
+              <circle class="dash__stop" cx="150" cy="170" r="3.5"/>
+              <text class="dash__place" x="140" y="174" text-anchor="end">Kelheim</text>
             </g>
             <g class="dash__route" style="--i:3">
-              <path class="dash__line" d="M210 150 Q148 223 52 226" pathLength="1"/>
-              <circle class="dash__stop" cx="52" cy="226" r="3.5"/>
-              <text class="dash__place" x="52" y="246" text-anchor="middle">Ingolstadt</text>
+              <path class="dash__line" d="M210 150 Q150 214 76 214" pathLength="1"/>
+              <circle class="dash__stop" cx="76" cy="214" r="3.5"/>
+              <text class="dash__place" x="76" y="234" text-anchor="middle">Ingolstadt</text>
             </g>
             <g class="dash__route" style="--i:4">
-              <path class="dash__line" d="M210 150 Q192 212 226 266" pathLength="1"/>
-              <circle class="dash__stop" cx="226" cy="266" r="3.5"/>
-              <text class="dash__place" x="236" y="270" text-anchor="start">Landshut</text>
+              <path class="dash__line" d="M210 150 Q200 196 226 232" pathLength="1"/>
+              <circle class="dash__stop" cx="226" cy="232" r="3.5"/>
+              <text class="dash__place" x="236" y="236" text-anchor="start">Landshut</text>
             </g>
             <g class="dash__route" style="--i:5">
-              <path class="dash__line" d="M210 150 Q291 143 350 198" pathLength="1"/>
-              <circle class="dash__stop" cx="350" cy="198" r="3.5"/>
-              <text class="dash__place" x="350" y="218" text-anchor="middle">Straubing</text>
+              <path class="dash__line" d="M210 150 Q284 144 332 190" pathLength="1"/>
+              <circle class="dash__stop" cx="332" cy="190" r="3.5"/>
+              <text class="dash__place" x="332" y="210" text-anchor="middle">Straubing</text>
+            </g>
+            <g class="dash__route dash__route--far" style="--i:6">
+              <path class="dash__far" d="M210 150 Q150 62 44 50" mask="url(#reveal-nuernberg)"/>
+              <circle class="dash__stop" cx="44" cy="50" r="3.5"/>
+              <text class="dash__place" x="44" y="36" text-anchor="middle">Nürnberg</text>
+            </g>
+            <g class="dash__route dash__route--far" style="--i:7">
+              <path class="dash__far" d="M210 150 Q170 214 166 280" mask="url(#reveal-muenchen)"/>
+              <circle class="dash__stop" cx="166" cy="280" r="3.5"/>
+              <text class="dash__place" x="156" y="284" text-anchor="end">München</text>
             </g>
             <g class="dash__patrol" aria-hidden="true"></g>
             <circle class="dash__home" cx="210" cy="150" r="6"/>
             <text class="dash__place dash__place--home" x="222" y="174">Regensburg</text>
           </svg>
+          <div class="dash__legend">
+            <span><svg viewBox="0 0 22 4" aria-hidden="true" focusable="false"><line x1="1" y1="2" x2="21" y2="2"/></svg>Region</span>
+            <span><svg viewBox="0 0 22 4" aria-hidden="true" focusable="false"><line class="is-far" x1="1" y1="2" x2="21" y2="2"/></svg>bayernweit</span>
+          </div>
         </div>
       </article>
     </div>
@@ -235,11 +263,20 @@
       <header class="section__head reveal">
         <p class="eyebrow">Einsatzgebiet</p>
         <h2>Sicherheitsdienst in Regensburg, der Oberpfalz und ganz&nbsp;Bayern</h2>
-        <p class="section__lead">Unser Sitz ist in Regensburg. Von hier aus sind wir in der Stadt, im Landkreis und in der gesamten Oberpfalz schnell vor Ort – und nach Absprache bayernweit im Einsatz.</p>
+        <p class="section__lead">Unser Sitz ist in Regensburg. In der Stadt, im Landkreis und in der gesamten Oberpfalz sind wir schnell vor Ort. Größere Aufträge übernehmen wir in ganz Bayern, zum Beispiel in München und Nürnberg.</p>
       </header>
-      <ul class="area__list reveal" aria-label="Einsatzorte">
-        <li>Regensburg</li><li>Landkreis Regensburg</li><li>Kelheim</li><li>Straubing</li><li>Neumarkt i. d. OPf.</li><li>Schwandorf</li><li>Landshut</li><li>Ingolstadt</li>
-      </ul>
+      <div class="area__group">
+        <h3 class="area__heading" id="area-region">Region – schnell vor Ort</h3>
+        <ul class="area__list reveal" aria-labelledby="area-region">
+          <li>Regensburg</li><li>Landkreis Regensburg</li><li>Kelheim</li><li>Straubing</li><li>Neumarkt i. d. OPf.</li><li>Schwandorf</li><li>Landshut</li><li>Ingolstadt</li>
+        </ul>
+      </div>
+      <div class="area__group">
+        <h3 class="area__heading" id="area-bayern">Bayernweit – bei größeren Aufträgen</h3>
+        <ul class="area__list reveal" aria-labelledby="area-bayern">
+          <li>München</li><li>Nürnberg</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -268,7 +305,7 @@
       <div class="faq reveal">
         <details><summary>Was kostet ein Sicherheitsdienst in Regensburg?</summary><p>Der Preis hängt von Einsatzart, Dauer, Uhrzeit und Anzahl der Sicherheitskräfte ab. Nach einem kurzen Gespräch erhalten Sie ein individuelles, transparentes Angebot.</p></details>
         <details><summary>Wie kurzfristig ist ein Einsatz möglich?</summary><p>Rufen Sie uns an oder schreiben Sie per WhatsApp. Wir prüfen kurzfristige Anfragen sofort und melden uns schnellstmöglich mit einer Rückmeldung.</p></details>
-        <details><summary>In welchen Regionen ist NV Bayern Security im Einsatz?</summary><p>Unser Sitz ist in Regensburg. Wir sind in Regensburg, im Landkreis, in der gesamten Oberpfalz und nach Absprache in ganz Bayern im Einsatz.</p></details>
+        <details><summary>In welchen Regionen ist NV Bayern Security im Einsatz?</summary><p>Unser Sitz ist in Regensburg. In Regensburg, im Landkreis und in der gesamten Oberpfalz sind wir schnell vor Ort. Größere Aufträge übernehmen wir in ganz Bayern, zum Beispiel in München und Nürnberg.</p></details>
         <details><summary>Für wen arbeitet NV Bayern Security?</summary><p>Für Unternehmen, Hausverwaltungen, Bauunternehmen, Veranstalter, Gastronomie und Privatpersonen, die einen zuverlässigen Sicherheitsdienst suchen.</p></details>
       </div>
     </div>
@@ -351,6 +388,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=2026112304" defer></script>
+<script src="assets/js/main.js?v=2026112305" defer></script>
 </body>
 </html>

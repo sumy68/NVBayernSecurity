@@ -115,6 +115,8 @@ details p { margin-top: 12px; font-size: .95rem; }
 
 /* ---------- Einsatzgebiet ---------- */
 .area__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid rgba(255, 255, 255, .12); }
+.area__group + .area__group { margin-top: 40px; }
+.area .area__heading { margin: 0 0 12px; font-family: var(--font-body); font-weight: 500; font-size: .85rem; line-height: 1.4; letter-spacing: 0; color: #7DB6FF; text-wrap: balance; }
 .area__list li { padding: 20px 0; border-bottom: 1px solid rgba(255, 255, 255, .12); font-family: var(--font-body); font-weight: 500; font-size: 1.1rem; letter-spacing: -.01em; color: var(--white); }
 
 /* ---------- Ablauf ---------- */
@@ -314,7 +316,7 @@ details p { margin-top: 12px; font-size: .95rem; }
 .hero__content { position: relative; z-index: 1; max-width: 900px; transform-origin: 50% 0; }
 
 /* Typo */
-.hero .eyebrow { display: flex; justify-content: center; align-items: center; margin-bottom: 18px; font-family: var(--font-body); font-weight: 500; font-size: .85rem; letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, .8); }
+.hero .eyebrow { display: block; text-align: center; text-wrap: balance; margin-bottom: 18px; font-family: var(--font-body); font-weight: 500; font-size: .85rem; letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, .8); }
 /* Schriftgröße auch an der Höhe begrenzt, damit die Einsatzkarte im ersten Bildschirm anschneidet */
 .hero h1 { max-width: 17ch; margin-inline: auto; font-family: var(--font-body); font-weight: 500; font-size: clamp(2.6rem, min(6vw, 8.4vh), 4.6rem); line-height: 1.04; letter-spacing: -.04em; color: var(--white); text-wrap: balance; }
 .hero__lead { max-width: 640px; margin: 20px auto 0; font-weight: 400; font-size: 1.05rem; line-height: 1.6; color: rgba(255, 255, 255, .78); text-wrap: pretty; }
@@ -348,7 +350,7 @@ details p { margin-top: 12px; font-size: .95rem; }
 .dash dd a:hover { color: #CFE9FF; }
 
 /* Selbst gezeichnete Einsatzkarte */
-.dash__map { display: flex; align-items: center; justify-content: center; min-width: 0; padding: 12px; border-radius: 12px; background: rgba(5, 11, 46, .18); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.dash__map { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; padding: 12px; border-radius: 12px; background: rgba(5, 11, 46, .18); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
 .dash__map svg { width: 100%; height: auto; overflow: visible; }
 .dash__ring { fill: none; stroke: rgba(255, 255, 255, .12); stroke-width: 1; stroke-dasharray: 2 6; }
 .dash__line { fill: none; stroke: rgba(255, 255, 255, .7); stroke-width: 1.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
@@ -357,10 +359,18 @@ details p { margin-top: 12px; font-size: .95rem; }
 .dash__place--home { font-weight: 600; font-size: .85rem; fill: var(--white); }
 .dash__home { fill: var(--white); }
 .dash__patrol circle { fill: var(--white); }
+/* Bayernweite Ziele (München, Nürnberg): fein gestrichelt, Einzeichnen über Maske */
+.dash__far { fill: none; stroke: rgba(255, 255, 255, .45); stroke-width: 1.5; stroke-linecap: round; stroke-dasharray: 3 5; }
+.dash__reveal { fill: none; stroke: #fff; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.dash__legend { align-self: flex-end; display: flex; gap: 14px; margin-top: 6px; font-family: var(--font-body); font-weight: 500; font-size: .7rem; line-height: 1; color: rgba(255, 255, 255, .6); }
+.dash__legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.dash__legend svg { width: 22px; height: 4px; overflow: visible; }
+.dash__legend line { stroke: rgba(255, 255, 255, .7); stroke-width: 1.5; stroke-linecap: round; }
+.dash__legend line.is-far { stroke: rgba(255, 255, 255, .45); stroke-dasharray: 3 5; }
 /* Linien zeichnen sich nacheinander, sobald die Karte sichtbar ist */
-.dash.is-armed .dash__line { stroke-dashoffset: 1; transition: stroke-dashoffset .9s var(--ease) calc(var(--i) * 120ms); }
+.dash.is-armed :is(.dash__line, .dash__reveal) { stroke-dashoffset: 1; transition: stroke-dashoffset .9s var(--ease) calc(var(--i) * 120ms); }
 .dash.is-armed .dash__stop, .dash.is-armed .dash__route .dash__place { opacity: 0; transition: opacity .5s var(--ease) calc(var(--i) * 120ms + 650ms); }
-.dash.is-drawn .dash__line { stroke-dashoffset: 0; }
+.dash.is-drawn :is(.dash__line, .dash__reveal) { stroke-dashoffset: 0; }
 .dash.is-drawn .dash__stop, .dash.is-drawn .dash__route .dash__place { opacity: 1; }
 
 @media (max-width: 860px) {
@@ -379,7 +389,7 @@ details p { margin-top: 12px; font-size: .95rem; }
 @media (prefers-reduced-motion: reduce) {
   .header::before, .header::after { transition: none; }
   .dash { transform: none !important; opacity: 1 !important; }
-  .dash.is-armed .dash__line { stroke-dashoffset: 0; transition: none; }
+  .dash.is-armed :is(.dash__line, .dash__reveal) { stroke-dashoffset: 0; transition: none; }
   .dash.is-armed .dash__stop, .dash.is-armed .dash__route .dash__place { opacity: 1; transition: none; }
   .btn__arrow { transition: none; }
 }
