@@ -329,7 +329,10 @@ details p { margin-top: 12px; font-size: .95rem; }
 
 /* Dashboard-Karte: ragt ~40 % in die weiße Sektion (Wert setzt JS) */
 .hero__stage { position: relative; z-index: 2; width: 100%; max-width: 1040px; margin: 56px 0 calc(-1 * var(--dash-overlap, 200px)); }
-.hero + .section { padding-top: calc(var(--dash-overlap, 200px) + clamp(64px, 9vw, 112px)); }
+/* Abstand Kartenunterkante -> #leistungen: JS-Überhang + fester Luftraum pro Breakpoint */
+.hero + .section { --hero-gap: 140px; padding-top: calc(var(--dash-overlap, 200px) + var(--hero-gap)); }
+@media (max-width: 860px) { .hero + .section { --hero-gap: 110px; } }
+@media (max-width: 640px) { .hero + .section { --hero-gap: 80px; } }
 .dash { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 32px; padding: 32px; text-align: left; border: 1px solid rgba(255, 255, 255, .14); border-radius: 18px; background: #0A2A8A var(--grad-card); box-shadow: 0 40px 80px -30px rgba(5, 11, 46, .55); color: rgba(255, 255, 255, .85); transform-origin: 50% 100%; }
 .dash.is-tilting { will-change: transform; }
 .dash__info { display: flex; flex-direction: column; min-width: 0; }
