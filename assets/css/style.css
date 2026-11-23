@@ -389,9 +389,6 @@ details p { margin-top: 12px; font-size: .95rem; }
 :root { --ease-film: cubic-bezier(.16, 1, .3, 1); }
 
 /* Eyebrow: feine Linie zeichnet sich, dann folgt der Text */
-.hero__rule { flex: none; width: 24px; height: 1px; margin-right: 14px; background: rgba(255, 255, 255, .6); transform: scaleX(0); transform-origin: 0 50%; transition: transform .6s var(--ease-film); }
-.is-loaded .hero__rule { transform: scaleX(1); }
-.hero__eyebrow .intro { display: inline-block; }
 
 /* Weiche Einblendung statt Sprung: Lead, Buttons, Karte */
 .hero .intro { transform: translateY(12px); transition: opacity .8s var(--ease-film), transform .9s var(--ease-film); }
@@ -412,7 +409,6 @@ details p { margin-top: 12px; font-size: .95rem; }
 .dash__patrol { pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__rule { transform: none; transition: none; }
   .hero .split .w > span { filter: none !important; }
   .hero__dots { opacity: 1; transform: none; transition: none; }
   .hero__content, .hero h1, .hero__field { transform: none !important; opacity: 1 !important; }
