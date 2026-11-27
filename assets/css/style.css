@@ -426,3 +426,26 @@ details p { margin-top: 12px; font-size: .95rem; }
   .hero__content, .hero h1, .hero__field { transform: none !important; opacity: 1 !important; }
   .dash__glare, .dash__patrol { display: none; }
 }
+
+/* ---------- Foto-Karten (Leistungen) ---------- */
+.card__media { position: relative; margin: -28px -28px 6px; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 15px 15px 0 0; background: var(--tint); }
+.card__media img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1); transition: transform .9s ease-out; }
+.card:hover .card__media img { transform: scale(1.04); }
+.symbolbild { position: absolute; right: 10px; bottom: 10px; z-index: 2; padding: 2px 7px; border-radius: 4px; background: rgba(7, 20, 40, .55); color: rgba(255, 255, 255, .9); font-size: .7rem; font-weight: 500; line-height: 1.5; pointer-events: none; }
+
+/* ---------- Bildstreifen „Im Einsatz" ---------- */
+.section--band { padding: clamp(56px, 7vw, 96px) 0; }
+.band { margin: 0; }
+.band__frame { position: relative; aspect-ratio: 21 / 9; overflow: hidden; border-radius: 18px; background: var(--tint); }
+.band__img { position: absolute; left: 0; top: -20px; width: 100%; height: calc(100% + 40px); object-fit: cover; transform: translate3d(0, var(--py, 0px), 0); will-change: transform; }
+.band__caption { margin-top: 14px; font-family: var(--font-body); font-weight: 400; font-size: .9rem; color: var(--muted); text-wrap: pretty; }
+
+@media (max-width: 640px) {
+  .card__media { aspect-ratio: 16 / 10; max-height: 260px; }
+  .band__frame { aspect-ratio: 4 / 3; max-height: 420px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card__media img { transition: none; }
+  .card:hover .card__media img { transform: none; }
+  .band__img { transform: none; will-change: auto; }
+}

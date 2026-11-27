@@ -128,6 +128,10 @@
   const stage = document.querySelector('.hero__stage');
   if (stage) initDash(stage, reduce);
 
+  // Bildstreifen „Im Einsatz": leichte Parallaxe im Rahmen (max. 40px, nur transform)
+  const bandFrame = document.querySelector('.band__frame');
+  if (bandFrame && !reduce) initBandParallax(bandFrame);
+
   // Kontaktformular: Prüfung + Versand per fetch (ohne JS normales POST)
   const contactForm = document.querySelector('.contact-form');
   if (contactForm && window.fetch && window.FormData) initContactForm(contactForm);
@@ -664,5 +668,29 @@
       new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(dash);
     }
     schedule(CFG.firstDelay);
+  }
+  function initBandParallax(frame) {
+    const img = frame.querySelector('.band__img');
+    if (!img) return;
+    const RANGE = 20; // ±20px = 40px Gesamtweg
+    let inView = false;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = frame.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const p = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
+      const k = Math.max(-1, Math.min(1, p));
+      img.style.setProperty('--py', `${(k * RANGE).toFixed(2)}px`);
+    };
+    const kick = () => { if (inView && !raf) raf = requestAnimationFrame(update); };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; kick(); }, { rootMargin: '80px 0px' }).observe(frame);
+    } else {
+      inView = true;
+    }
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick, { passive: true });
+    update();
   }
 })();
